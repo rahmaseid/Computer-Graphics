@@ -8,6 +8,10 @@ var points=[];  // put all position and color values of planet vertices here
 var cmtStack=[];
 var Ratio=1.618;   // ratio used for canvas and for world window
 
+var ringBPoint=[], ringFPoints=[];
+var ringBCounts=[], ringFCounts=[];
+var ringBBuffer, ringFBuffer;
+
 window.onload = function init()
 {
     canvas = document.getElementById( "gl-canvas" );
@@ -51,18 +55,45 @@ window.onload = function init()
     render();
 }
 
+function pushV(distance, x, y, color){
+    distance.push(x, y, col[0], col[1], col[2], col[3]);
+}
+
+function pushBlock(block){
+    const start = points.length/6;
+    for (let i = 0;i < i<block.length;i++)
+        points.push(block[i]);
+    const count = (points.length/6) - start;
+
+    return {start, count};
+}
+
+
 // push all the points into points array
 function GenerateBackCircles()
 {
+    const cols = [
+        vec4(0.95, 0.78, 0.18, 1.0),
+        vec4(0.75, 0.25, 0.95, 1.0),
+        vec4(0.25, 0.84, 0.95, 1.0),
+        vec4(0.95, 0.45, 0.25, 1.0)
+    ];
 
+    for (let i = 0; i < 4; i++){
+        const start = points.length/6;
 
+    }
 
 }
 
 // push all the points into points array
 function GenerateCircle()
 {
-
+    const circle= GeneratePlanet();
+    circleStart = points.length/6;
+    for (let i = 0; i<circle.length; i++)
+        points.push(circle[i]);
+    circleCount = circle.length/6;
 
 
 

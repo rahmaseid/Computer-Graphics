@@ -1,9 +1,74 @@
 <!--Rahma Seid-->
-<!--Project 2-->
+<!--Project 3-->
 <!--A.I. Disclaimer: All work for this assignment was completed by myself and entirely without 
 the use of artificial intelligence tools such as ChatGPT, MS Copilot, other LLMs, etc. -->
+
 <html>
-<head><title>Halloween Game</title><script>window.addEventListener('message', function(event) { 
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+
+uniform vec3 sc;
+uniform vec3 tr;
+uniform vec3 theta;
+
+void main() 
+{
+    // Compute the sines and cosines of theta for each of
+    //   the three axes in one computation.
+	vec3 angles = radians( theta );
+    vec3 c = cos( angles );
+    vec3 s = sin( angles );
+
+    // Remeber: these matrices are column-major
+    mat4 rx = mat4( 1.0,  0.0,  0.0, 0.0,
+		    0.0,  c.x,  s.x, 0.0,
+		    0.0, -s.x,  c.x, 0.0,
+		    0.0,  0.0,  0.0, 1.0 );
+
+    mat4 ry = mat4( c.y, 0.0, -s.y, 0.0,
+		    0.0, 1.0,  0.0, 0.0,
+		    s.y, 0.0,  c.y, 0.0,
+		    0.0, 0.0,  0.0, 1.0 );
+
+    mat4 rz = mat4( c.z, s.z, 0.0, 0.0,
+		    -s.z,  c.z, 0.0, 0.0,
+		    0.0,  0.0, 1.0, 0.0,
+		    0.0,  0.0, 0.0, 1.0 );
+
+    mat4 translation
+            = mat4( 1.0,  0.0, 0.0, 0,
+                    0.0,  1.0, 0.0, 0,
+                    0.0,  0.0, 1.0, 0,
+                    tr.x, tr.y, tr.z, 1.0);
+
+    mat4 scale
+            = mat4(sc.x,  0.0, 0.0, 0.0,
+                    0.0, sc.y, 0.0, 0.0,
+                    0.0,  0.0,sc.z, 0.0,
+                    0.0,  0.0, 0.0, 1.0);
+
+   gl_Position = translation * rz * ry * rx  * scale * vPosition;
+} 
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+   
+void main(){
+   gl_FragColor = vec4 (0, 0, 1, 1);
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="ghost.js"></script>
+
+<head><script>window.addEventListener('message', function(event) { 
 					if( !event.data ) {
 						return;
 					}
@@ -110,45 +175,17 @@ the use of artificial intelligence tools such as ChatGPT, MS Copilot, other LLMs
 							}
 						}
 
-						var url = '/d2l/customization/pearsonlti/6706/Launch' + query;(target == '_blank') ? window.open( url, '_blank' ) : location.replace( url );}</script></head>
-
-<script id="vertex-shader" type="x-shader/x-vertex">
-attribute  vec4 vPosition;
-attribute  vec4 vColor;
-varying vec4 fColor;
-
-uniform mat4 modelViewMatrix;
-uniform mat4 projectionMatrix;
-
-
-void main() {
-   gl_Position =  projectionMatrix * modelViewMatrix * vPosition;
-   fColor = vColor;
-}
-</script>
-
-<script id="fragment-shader" type="x-shader/x-fragment">
-precision mediump float;
-varying vec4 fColor;
-
-void main() {
-   gl_FragColor = fColor;
-}
-</script>
-
-<script type="text/javascript" src="../Common/webgl-utils.js"></script>
-<script type="text/javascript" src="../Common/initShaders.js"></script>
-<script type="text/javascript" src="../Common/MV.js"></script>
-
-
-<script type="text/javascript" src="halloween.js"></script>
-<script type="text/javascript" src="ghost.js"></script>
-<script type="text/javascript" src="planet.js"></script>
-
-<body onload="main()">
-<canvas id="gl-canvas" width="1216"" height="752"> <!--1216.7/752 = 1.618, which is needed for golden ratio-->
+						var url = '/d2l/customization/pearsonlti/6706/Launch' + query;(target == '_blank') ? window.open( url, '_blank' ) : location.replace( url );}</script></head><body>
+<canvas id="gl-canvas" width="700"" height="600">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
+   
+<br/>
+
+<div>
+<button id= "OneButton">Ghost</button>
+<button id= "TwoButton">Fly!</button>
+</div>
 
 </body>
 </html>
